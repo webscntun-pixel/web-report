@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Council Reporter - NTUN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --ntun-blue: #00B5EF;      
+            --ntun-pink: #FF69B4;      
+            --ntun-blue-light: rgba(0, 181, 239, 0.08);
+            --ntun-pink-light: rgba(255, 105, 180, 0.08);
+            --bg-light: #f4f7fa;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.06), 0 5px 15px -3px rgba(0, 0, 0, 0.03);
+            
+            --status-pending: #ef4444;
+            --status-progress: #f59e0b;
+            --status-done: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; }
+        input, textarea, select, button { font-family: 'Sarabun', sans-serif; }
+        
+        body { 
+            background: linear-gradient(135deg, #cceeff 0%, #ffe0ed 50%, #d6f0ff 100%); 
+            background-attachment: fixed;
+            color: var(--text-dark); 
+            min-height: 100vh; 
+            padding-bottom: 50px; 
+            -webkit-font-smoothing: antialiased; 
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(circle, rgba(255, 255, 255, 0.85) 5px, transparent 6px),   
+                radial-gradient(circle, rgba(255, 255, 255, 0.65) 7px, transparent 8px),   
+                radial-gradient(circle, rgba(0, 181, 239, 0.25) 4px, transparent 5px),     
+                radial-gradient(circle, rgba(255, 105, 180, 0.22) 5px, transparent 6px);   
+            background-size: 160px 160px, 200px 200px, 100px 100px, 140px 140px;            
+            animation: waterParticles 30s linear infinite;
+        }
+
+        @keyframes waterParticles {
+            0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
+            100% { background-position: 160px -320px, -200px -400px, 100px -200px, -140px -280px; }
+        }
+
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%; z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid #edf2f7;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1300px; margin: 0 auto; padding: 12px 20px; width: 100%;
+        }
+
+        .logo-area { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        .logo-circle img {
+            width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+            border: 2px solid rgba(0, 181, 239, 0.15); box-shadow: 0 4px 10px rgba(2, 132, 199, 0.15);
+        }
+        .logo-text h1 { font-size: 1.1rem; color: var(--text-dark); font-weight: 700; letter-spacing: 0.5px; }
+        .logo-text p { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-top: 2px; }
+
+        .btn-back-home {
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: white;
+            border: 2px solid var(--ntun-blue); color: var(--ntun-blue); border-radius: 12px;
+            font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 181, 239, 0.05); flex-shrink: 0;
+            cursor: pointer;
+        }
+        .btn-back-home:hover { background: var(--ntun-blue); color: white; transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0, 181, 239, 0.2); }
+
+        .wrapper { width: 100%; max-width: 1100px; margin: 100px auto 30px auto; padding: 0 20px; display: flex; flex-direction: column; gap: 30px; }
+        
+        .card {
+            background: white; border-radius: 24px; padding: 35px; box-shadow: var(--card-shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        h2 { font-size: 1.6rem; font-weight: 700; color: var(--ntun-blue); margin-bottom: 14px; letter-spacing: -0.5px; }
+        h3 { font-size: 1.4rem; font-weight: 700; color: var(--ntun-blue); margin-bottom: 12px; }
+        p.subtitle { color: var(--text-muted); font-size: 15px; margin-top: -6px; margin-bottom: 28px; line-height: 1.6; }
+
+        .steps-instruction {
+            color: #475569;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 14px;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .form-group { margin-bottom: 22px; }
+        .form-row { display: grid; grid-template-columns: 2fr 1fr 1.5fr; gap: 15px; margin-bottom: 20px; }
+
+        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #475569; }
+        
+        input[type="text"], input[type="tel"], input[type="password"], textarea, select {
+            width: 100%; padding: 14px 16px; background: #f8fafc;
+            border: 2px solid #e2e8f0; border-radius: 14px; color: var(--text-dark);
+            font-size: 15px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        input:focus, textarea:focus, select:focus { 
+            outline: none; border-color: var(--ntun-blue); background: white; 
+            box-shadow: 0 0 0 4px rgba(0, 181, 239, 0.15);
+        }
+
+        .category-grid-container {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;
+        }
+        .category-big-card {
+            background: white; border: 2px solid #cbd5e1; border-radius: 20px; padding: 25px 15px;
+            text-align: center; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            position: relative; overflow: hidden;
+        }
+        .category-big-card:active { transform: scale(0.96) translateY(2px); }
+        .category-big-card:hover { transform: translateY(-4px); border-color: #94a3b8; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08); }
+        
+        .category-big-card.selected-blue { border-color: #00b5ef !important; box-shadow: 0 0 0 2px #00b5ef, 0 12px 28px rgba(0, 181, 239, 0.25) !important; background: linear-gradient(180deg, #ffffff, #e0f7ff) !important; }
+        .category-big-card.selected-purple { border-color: #a855f7 !important; box-shadow: 0 0 0 2px #a855f7, 0 12px 28px rgba(168, 85, 247, 0.25) !important; background: linear-gradient(180deg, #ffffff, #f3e8ff) !important; }
+        .category-big-card.selected-red { border-color: #ef4444 !important; box-shadow: 0 0 0 2px #ef4444, 0 12px 28px rgba(239, 68, 68, 0.25) !important; background: linear-gradient(180deg, #ffffff, #ffe4e6) !important; }
+        .category-big-card.selected-orange { border-color: #f97316 !important; box-shadow: 0 0 0 2px #f97316, 0 12px 28px rgba(249, 115, 22, 0.25) !important; background: linear-gradient(180deg, #ffffff, #ffedd5) !important; }
+
+        .big-card-icon-wrapper { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 22px; transition: all 0.25s ease; }
+        .bg-blue-icon { background: #e0f7ff; color: var(--ntun-blue); }
+        .bg-purple-icon { background: #f3e8ff; color: #a855f7; }
+        .bg-pink-icon { background: #ffe4e6; color: #ef4444; }
+        .bg-orange-icon { background: #ffedd5; color: #f97316; }
+        
+        .big-card-title { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+        .big-card-subtitle { font-size: 12px; color: var(--text-muted); font-weight: 400; line-height: 1.4; }
+
+        .lost-found-board {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 15px;
+        }
+        .lost-item-card {
+            background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 18px; padding: 20px;
+            display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s;
+        }
+        .lost-item-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.04); }
+        .lost-item-header { display: flex; justify-content: space-between; align-items: center; }
+        .lost-item-tag { background: #f3e8ff; color: #a855f7; padding: 4px 10px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+        
+        .lost-item-time { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 50px; }
+        .status-searching { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+        .status-found { background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
+
+        .lost-item-title { font-size: 16px; font-weight: 700; color: var(--text-dark); }
+        .lost-item-detail { font-size: 14px; color: #475569; line-height: 1.4; }
+        .lost-item-meta { font-size: 12.5px; color: var(--text-muted); border-top: 1px dashed #e2e8f0; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+        
+        .admin-nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid #cbd5e1; margin-bottom: 25px; padding-bottom: 2px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .admin-nav-tabs::-webkit-scrollbar { display: none; }
+        .admin-tab-btn { padding: 12px 24px; border: none; background: none; font-size: 15px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-bottom: 4px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .admin-tab-btn:hover { color: var(--text-dark); }
+        .admin-tab-btn.active { color: var(--ntun-blue); border-bottom-color: var(--ntun-blue); }
+        
+        .admin-section-header { background: #f1f5f9; padding: 12px 20px; border-radius: 12px; margin-bottom: 15px; font-weight: 700; color: #334155; display: flex; align-items: center; justify-content: center; position: relative; }
+        .admin-section-header .header-title { font-weight: 700; display: inline-flex; align-items: center; gap: 10px; }
+        .admin-section-header.sub-category { margin-top: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid var(--ntun-blue); justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+        .password-wrapper { position: relative; width: 100%; }
+        .password-wrapper input { padding-right: 45px; }
+        .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-muted); font-size: 18px; }
+
+        .upload-zone {
+            border: 2px dashed #cbd5e1; border-radius: 20px;
+            padding: 35px 20px; text-align: center; cursor: pointer; transition: all 0.25s ease;
+            background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 220px;
+        }
+        .upload-zone:hover { background: var(--ntun-blue-light); border-color: var(--ntun-blue); }
+        .upload-zone i { font-size: 44px; color: var(--ntun-pink); margin-bottom: 15px; transition: transform 0.3s ease; }
+        .upload-zone:hover i { transform: scale(1.1); }
+        .upload-zone p { font-size: 14px; color: var(--text-dark); font-weight: 500; }
+        .file-preview { margin-top: 12px; font-size: 14px; color: var(--status-done); display: none; font-weight: 600; background: rgba(16, 185, 129, 0.1); padding: 6px 16px; border-radius: 20px; }
+
+        .btn {
+            background: linear-gradient(135deg, var(--ntun-blue), #009ecd); color: white; border: none; padding: 15px 30px;
+            border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 10px; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 181, 239, 0.25);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 181, 239, 0.35); filter: brightness(1.05); }
+        .btn-pink { background: linear-gradient(135deg, var(--ntun-pink), #ec4899); box-shadow: 0 4px 12px rgba(255, 105, 180, 0.25); }
+        .btn-pink:hover { box-shadow: 0 6px 20px rgba(255, 105, 180, 0.35); }
+        .btn-sm { padding: 6px 12px; font-size: 13px; border-radius: 8px; }
+        .btn-danger { background: #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: #dc2626; box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3); }
+        .btn-view-evidence { background: #e0f7ff; color: #0284c7; border: 1px solid #bae6fd; box-shadow: none; font-size: 13px; padding: 6px 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-view-evidence:hover { background: #00b5ef; color: white; border-color: #00b5ef; }
+
+        .stats-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .stat-box { padding: 20px 15px; border-radius: 16px; background: white; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px; transition: all 0.3s; }
+        .stat-icon-area { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+        .stat-info-area { display: flex; flex-direction: column; gap: 2px; }
+        .stat-box h4 { font-size: 14px; color: #475569; font-weight: 600; margin: 0; white-space: nowrap; }
+        .stat-box .counter-wrapper { font-size: 22px; font-weight: 700; color: #1e293b; }
+        
+        .box-pending { background-color: #eff6ff; border-color: #bfdbfe; }
+        .box-pending .stat-icon-area { background-color: #3b82f6; color: white; }
+        .box-pending h4 { color: #1e40af; }
+        .box-progress { background-color: #fffbeb; border-color: #fef3c7; }
+        .box-progress .stat-icon-area { background-color: #d97706; color: white; }
+        .box-progress h4 { color: #92400e; }
+        .box-done { background-color: #ecfdf5; border-color: #a7f3d0; }
+        .box-done .stat-icon-area { background-color: #10b981; color: white; }
+        .box-done h4 { color: #065f46; }
+        .box-forwarded { background-color: #f5f3ff; border-color: #ddd6fe; }
+        .box-forwarded .stat-icon-area { background-color: #8b5cf6; color: white; }
+        .box-forwarded h4 { color: #5b21b6; }
+
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; background: white; white-space: nowrap; }
+        th, td { padding: 14px 18px; border-bottom: 1px solid #edf2f7; font-size: 14px; vertical-align: middle; }
+        th { font-weight: 600; color: #475569; text-transform: uppercase; background: #f1f5f9; font-size: 12.5px; }
+        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 50px; font-size: 12px; font-weight: 600; }
+        
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px;
+        }
+        .modal.active { opacity: 1; pointer-events: auto; }
+        .modal-content { width: 100%; max-width: 500px; background: white; border-radius: 28px; padding: 35px; transform: scale(0.95); transition: transform 0.3s ease; position: relative; max-height: 90vh; overflow-y: auto; }
+        .modal.active .modal-content { transform: scale(1); }
+        .modal-close-btn { position: absolute; top: 20px; right: 20px; background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); font-size: 16px; }
+
+        #evidenceModal { z-index: 11000 !important; }
+        #deleteConfirmModal { z-index: 12000 !important; }
+
+        .toast-notification {
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-20px);
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(8px); color: white; padding: 14px 28px; border-radius: 50px; font-weight: 600; font-size: 15px;
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 99999; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        .alert-modal-content { background: #ffffff; border-top: 8px solid #ef4444; max-width: 420px; text-align: center; padding: 30px 25px; border-radius: 20px; }
+        .alert-modal-icon { font-size: 50px; color: #ef4444; margin-bottom: 15px; }
+
+        .evidence-preview-container { text-align: center; padding-top: 10px; }
+        .evidence-img-frame { max-width: 100%; max-height: 380px; border-radius: 16px; border: 1px solid #e2e8f0; object-fit: contain; box-shadow: 0 10px 25px rgba(0,0,0,0.05); background: #f8fafc; margin-bottom: 15px; }
+        .evidence-link-box { background: #e0f7ff; border: 1px solid #00b5ef; padding: 12px 16px; border-radius: 12px; color: #0369a1; text-align: left; word-break: break-all; margin-bottom: 15px; font-size: 14px; }
+
+        .delete-list-preview { text-align: left; background: #f8fafc; border: 1px solid #edf2f7; border-radius: 12px; padding: 12px; max-height: 150px; overflow-y: auto; margin-bottom: 20px; font-size: 14px; color: #334155; }
+        .delete-list-item { padding: 4px 0; border-bottom: 1px dashed #e2e8f0; }
+        .delete-list-item:last-child { border-bottom: none; }
+
+        @media (max-width: 768px) {
+            header { padding: 5px 0; }
+            .navbar { padding: 10px 12px; }
+            .logo-circle img { width: 36px; height: 36px; }
+            .logo-text h1 { font-size: 0.85rem; letter-spacing: 0px; line-height: 1.2; }
+            .logo-text p { display: none; }
+            
+            .btn-back-home { padding: 8px 12px; font-size: 12px; border-radius: 10px; gap: 4px; }
+            .btn-back-home span { font-weight: 700; }
+
+            .wrapper { margin: 75px auto 20px auto; gap: 16px; padding: 0 10px; }
+            .card { padding: 20px 14px; border-radius: 16px; }
+            
+            h2 { font-size: 1.2rem; margin-bottom: 8px; line-height: 1.4; }
+            h3 { font-size: 1.1rem; }
+            p.subtitle { font-size: 13px; margin-top: -2px; margin-bottom: 16px; line-height: 1.4; }
+            .steps-instruction { font-size: 13px; padding: 12px 14px; margin-bottom: 18px; line-height: 1.6; }
+
+            .form-row { grid-template-columns: 1fr; gap: 12px; margin-bottom: 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 0; }
+            .form-group { margin-bottom: 14px; }
+            label { font-size: 13px; margin-bottom: 4px; }
+            input[type="text"], input[type="tel"], input[type="password"], textarea, select { padding: 11px 12px; font-size: 13.5px; border-radius: 10px; }
+            .btn { padding: 12px 16px; font-size: 14.5px; border-radius: 10px; }
+
+            .category-grid-container { grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 16px; }
+            .category-big-card { padding: 14px 10px; flex-direction: column; text-align: center; justify-content: center; gap: 6px; border-radius: 12px; }
+            .big-card-icon-wrapper { margin-bottom: 0; width: 40px; height: 40px; font-size: 16px; flex-shrink: 0; }
+            .big-card-title { font-size: 13px; margin-bottom: 0; font-weight: 700; }
+            .big-card-subtitle { display: none; }
+            
+            .lost-found-board { grid-template-columns: 1fr; gap: 12px; }
+            .lost-item-card { padding: 14px; border-radius: 14px; gap: 8px; }
+            .lost-item-title { font-size: 14.5px; }
+            .lost-item-detail { font-size: 12.5px; }
+            .btn-view-evidence { padding: 8px 10px; font-size: 12.5px; }
+            .lost-item-meta { font-size: 11.5px; padding-top: 8px; }
+
+            .modal { padding: 10px; }
+            .modal-content { padding: 20px 14px; border-radius: 16px; width: 100%; max-height: 85vh; }
+            .modal-close-btn { top: 12px; right: 12px; width: 30px; height: 30px; font-size: 13px; }
+
+            .stats-container { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-box { padding: 12px 10px; border-radius: 12px; gap: 8px; align-items: center; }
+            .stat-box h4 { font-size: 12px; white-space: normal; line-height: 1.2; }
+            .stat-box .counter-wrapper { font-size: 15px; }
+            .stat-icon-area { width: 32px; height: 32px; font-size: 14px; }
+
+            th, td { padding: 8px 10px; font-size: 12px; }
+            th { font-size: 10.5px; }
+            .admin-nav-tabs { gap: 4px; margin-bottom: 16px; }
+            .admin-tab-btn { padding: 8px 12px; font-size: 12.5px; gap: 4px; border-bottom-width: 3px; }
+            .admin-section-header { padding: 8px 12px; font-size: 12.5px; margin-bottom: 10px; gap: 6px; }
+            
+            #claimFormModal .modal-content div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 0 !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .btn-back-home span { display: none; }
+            .btn-back-home { padding: 10px; border-radius: 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-notification" id="successToast">
+        <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+        <span id="toastText">ดำเนินการส่งข้อมูลเสร็จสิ้น!</span>
+    </div>
+
+    <!-- Loading banner แสดงระหว่างดึงข้อมูลจาก Sheets -->
+    <div id="loadingBanner" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.82); backdrop-filter:blur(6px); z-index:99990; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+        <div style="width:48px; height:48px; border:5px solid #e2e8f0; border-top-color:#00B5EF; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+        <div style="font-size:16px; font-weight:600; color:#334155;">กำลังโหลดข้อมูลจาก Google Sheets...</div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    </div>
+
+    <div class="modal" id="deleteConfirmModal">
+        <div class="alert-modal-content" style="border-top-color: #ef4444; max-width: 420px;">
+            <div class="alert-modal-icon" style="color: #ef4444;"><i class="fa-solid fa-trash-can-arrow-up"></i></div>
+            <div style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">ยืนยันการลบข้อมูล?</div>
+            <div style="font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 12px;">คุณแน่ใจหรือไม่ว่าต้องการลบรายการปัญหาที่เลือกเหล่านี้ออกจากระบบอย่างถาวร?</div>
+            
+            <div class="delete-list-preview" id="deleteListPreviewArea"></div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button type="button" class="btn" style="background: #cbd5e1; color: #475569; box-shadow: none;" onclick="toggleModal('deleteConfirmModal', false)">ยกเลิก</button>
+                <button type="button" class="btn btn-danger" onclick="executeDeleteSelectedComplaints()">ใช่, ยืนยันลบ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="anonymousBlockedModal">
+        <div class="alert-modal-content" style="border-top-color: #ef4444;">
+            <div class="alert-modal-icon" style="color: #ef4444;"><i class="fa-solid fa-user-shield"></i></div>
+            <div style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">ไม่สามารถปิดบังตัวตนได้</div>
+            <div style="font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">
+                สำหรับหมวดหมู่ <b>"แจ้งเก็บของได้"</b> ระบบจำเป็นต้องใช้ข้อมูล ชื่อ ชั้น และเลขประจำตัวของผู้แจ้งอย่างถูกต้อง เพื่อติดต่อประสานงานส่งพัสดุคืนแก่เจ้าของครับ
+            </div>
+            <button type="button" class="btn btn-pink" style="width:100%; background: #ef4444;" onclick="closeAnonymousBlockedModal()">รับทราบ, ฉันจะกรอกข้อมูล</button>
+        </div>
+    </div>
+
+    <div class="modal" id="validationAlertModal">
+        <div class="alert-modal-content">
+            <div class="alert-modal-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div style="font-size: 17px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">จำเป็นต้องแนบหลักฐาน</div>
+            <div style="font-size: 13.5px; color: #64748b; line-height: 1.5; margin-bottom: 20px;">Note: สำหรับหมวดหมู่ "แจ้งเก็บของได้" ระบบกำหนดให้คุณจำเป็นต้องแนบหลักฐานรูปภาพหรือลิงก์ยืนยัน เพื่อใช้ตรวจสอบพัสดุครับ</div>
+            <button type="button" class="btn btn-pink" style="width:100%;" onclick="toggleModal('validationAlertModal', false)">ตกลง, ฉันจะแนบรูป</button>
+        </div>
+    </div>
+
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo-area">
+                <!-- <div class="logo-circle"><img src="https://via.placeholder.com/48" alt="NTUN LOGO" onerror="this.src='https://via.placeholder.com/48'"></div> -->
+                <div class="logo-circle"><img src="IMG_6993.jpg" alt="NTUN LOGO"></div>
+                <div class="logo-text">
+                    <h1>NTUN STUDENT COUNCIL</h1>
+                    <p>สภานักเรียนโรงเรียนนวมินทราชินูทิศ เตรียมอุดมศึกษาน้อมเกล้า</p>
+                </div>
+            </a>
+            <button class="btn-back-home" onclick="openAdminPanel()"><i class="fa-solid fa-lock"></i> <span>Admin panel</span></button>
+        </nav>
+    </header>
+
+    <div class="wrapper">
+        
+        <div class="card">
+            <h2><i class="fa-solid fa-bullhorn" style="color: var(--ntun-pink);"></i> ช่องทางการรับเรื่องร้องเรียนแจ้งปัญหาออนไลน์ </h2>
+            <div class="steps-instruction">
+                <b>นักเรียนสามารถดำเนินการได้เพียง 5 ขั้นตอนดังนี้:</b><br>
+                1. เลือกหมวดหมู่เรื่องที่ต้องการจะแจ้ง<br>
+                2. กรอกข้อมูลผู้แจ้ง หากไม่ต้องการระบุให้กดปุ่มไม่ระบุตัวตน (ระบบจะไม่เปิดเผยข้อมูลผู้แจ้งต่อสาธารณะ)<br>
+                3. กรอกรายละเอียดปัญหาที่ต้องการจะแจ้ง<br>
+                4. แนบรูปภาพหลักฐาน<br>
+                5. รอแจ้งผลดำเนินการ
+            </div>
+            
+            <form id="reportForm">
+                <div class="category-grid-container">
+                    <div class="category-big-card" id="catRepair" onclick="selectCategory(this, 'อุปกรณ์ห้องเรียนพัง', 'blue')">
+                        <div class="big-card-icon-wrapper bg-blue-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+                        <div>
+                            <div class="big-card-title">อุปกรณ์ชำรุด</div>
+                            <div class="big-card-subtitle">อุปกรณ์ภายในโรงเรียนชำรุดหรือเสียหาย</div>
+                        </div>
+                    </div>
+                    <div class="category-big-card" id="catLost" onclick="selectCategory(this, 'แจ้งเก็บของได้', 'purple')">
+                        <div class="big-card-icon-wrapper bg-purple-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                        <div>
+                            <div class="big-card-title">แจ้งเก็บของได้</div>
+                            <div class="big-card-subtitle">พบของตกหล่น ไม่มีเจ้าของ</div>
+                        </div>
+                    </div>
+                    <div class="category-big-card" id="catSmoking" onclick="selectCategory(this, 'บุหรี่ไฟฟ้าในโรงเรียน', 'red')">
+                        <div class="big-card-icon-wrapper bg-pink-icon"><i class="fa-solid fa-smoking"></i></div>
+                        <div>
+                            <div class="big-card-title">พฤติกรรมไม่เหมาะสม</div>
+                            <div class="big-card-subtitle">พบเห็นเหตุพฤติกรรมไม่เหมาะสมภายในโรงเรียน</div>
+                        </div>
+                    </div>
+                    <div class="category-big-card" id="catGeneral" onclick="selectCategory(this, 'ปัญหาทั่วไป', 'orange')">
+                        <div class="big-card-icon-wrapper bg-orange-icon"><i class="fa-solid fa-comment-dots"></i></div>
+                        <div>
+                            <div class="big-card-title">ปัญหาทั่วไป</div>
+                            <div class="big-card-subtitle">เรื่องทั่วไป ปัญหาอื่นๆ ที่ต้องการแจ้ง</div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedCategoryValue" value="">
+
+                <div class="form-row">
+                    <div>
+                        <label>ชื่อ-นามสกุล ผู้แจ้ง</label>
+                        <input type="text" id="studentName" placeholder="เช่น นางสาวสภา นะตอน" required>
+                    </div>
+                    <div>
+                        <label>ชั้น ม.</label>
+                        <input type="text" id="studentClass" placeholder="เช่น 6/7" required>
+                    </div>
+                    <div>
+                        <label>เลขประจำตัวนักเรียน</label>
+                        <input type="text" id="studentId" placeholder="เช่น 12345" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; line-height: 1.4;">
+                        <input type="checkbox" id="isAnonymous" style="width: 18px; height: 18px; flex-shrink:0;" onchange="toggleAnonymous(this)">
+                        <span>
+                            <b style="color: #ef4444;"><i class="fa-solid fa-user-secret"></i> ไม่ระบุตัวตน</b> 
+                            (ระบบจะบล็อกและไม่เปิดเผยชื่อแก่อาจารย์หรือบุคคลภายนอก)
+                        </span>
+                    </label>
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label>หัวข้อปัญหา / สิ่งของที่พบ</label>
+                            <input type="text" id="issueTopic" placeholder="ระบุหัวข้อปัญหา / สิ่งของที่พบ">
+                        </div>
+                        <div class="form-group">
+                            <label>สถานที่เกิดเหตุ / จุดที่พบสิ่งของ</label>
+                            <input type="text" id="issueLocation" placeholder="เช่น อาคาร 3 ชั้น 2, บริเวณโรงอาหารใต้โดม">
+                        </div>
+                        <div class="form-group">
+                            <label>รายละเอียดเพิ่มเติม</label>
+                            <textarea id="issueDetail" rows="3" placeholder="กรุณาระบุรายละเอียดเพิ่มเติม..."></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label id="evidenceLabel">แนบรูปภาพหรือลิงก์หลักฐาน (ไม่บังคับ)</label>
+                            <div class="upload-zone" id="uploadZoneMain" onclick="document.getElementById('fileInput').click()">
+                                <i class="fa-solid fa-cloud-arrow-up" id="uploadIconMain"></i>
+                                <p id="uploadTextMain">คลิกเพื่อเลือกไฟล์รูปภาพหลักฐาน</p>
+                                <div class="file-preview" id="filePreview"></div>
+                                <input type="file" id="fileInput" style="display: none;" accept="image/*" onchange="handleFileSelect(this)">
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <input type="text" id="driveUrl" placeholder="🔗 หรือวางลิงก์รูปภาพ / Google Drive ที่นี่">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn btn-pink" style="width: 100%; margin-top: 10px;" onclick="submitReport()">
+                    <i class="fa-solid fa-paper-plane"></i> ส่งข้อมูลให้สภานักเรียนประสานงาน
+                </button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-box-open" style="color: #a855f7;"></i> บอร์ดประกาศตามหาเจ้าของ </h2>
+            <p class="subtitle">หากนักเรียนพบเจอสิ่งของตนที่สูญหาย นักเรียนสามารถเข้ามาตรวจสอบรายการพัสดุ ดูรูปภาพเช็ครายละเอียดเพื่อมาติดต่อขอรับของคืนได้ที่ห้องสภานักเรียน</p>
+            <div class="lost-found-board" id="lostFoundBoard">
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><i class="fa-solid fa-chart-pie" style="color: var(--ntun-blue);"></i> สรุปสถานะการดำเนินงาน</h2>
+            <p class="subtitle">จำนวนรายการและสถานะ ในการดำเนินงานจัดการแก้ไขปัญหาต่างๆ ภายในการดูแล of สภานักเรียน</p>
+            <div class="stats-container">
+                <div class="stat-box box-pending">
+                    <div class="stat-icon-area"><i class="fa-solid fa-inbox"></i></div>
+                    <div class="stat-info-area">
+                        <h4>เรื่องร้องเรียนทั้งหมด</h4>
+                        <div class="counter-wrapper" id="statTotal">0 รายการ</div>
+                    </div>
+                </div>
+                <div class="stat-box box-progress">
+                    <div class="stat-icon-area"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                    <div class="stat-info-area">
+                        <h4>กำลังดำเนินการ</h4>
+                        <div class="counter-wrapper" id="statProgress">0 รายการ</div>
+                    </div>
+                </div>
+                <div class="stat-box box-forwarded">
+                    <div class="stat-icon-area"><i class="fa-solid fa-share-from-square"></i></div>
+                    <div class="stat-info-area">
+                        <h4>ส่งต่อหน่วยงานอื่น</h4>
+                        <div class="counter-wrapper" id="statForward">0 รายการ</div>
+                    </div>
+                </div>
+                <div class="stat-box box-done">
+                    <div class="stat-icon-area"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info-area">
+                        <h4>แก้ไขสำเร็จ</h4>
+                        <div class="counter-wrapper" id="statDone">0 รายการ</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="toggleModal('loginModal', false)"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="text-align: center; margin-bottom: 20px;"><i class="fa-solid fa-lock"></i> เข้าสู่ระบบแอดมินสภานักเรียน</h3>
+            <div class="form-group">
+                <label>ชื่อผู้ใช้งาน (Username)</label>
+                <input type="text" id="adminUser" placeholder="ระบุบัญชีแอดมิน">
+            </div>
+            <div class="form-group">
+                <label>รหัสผ่าน (Password)</label>
+                <div class="password-wrapper">
+                    <input type="password" id="adminPass" placeholder="ระบุรหัสผ่านเข้าสภาฯ">
+                    <i class="fa-solid fa-eye toggle-password" id="eyeIcon" onclick="togglePasswordVisibility()"></i>
+                </div>
+            </div>
+            <button type="button" class="btn" style="width: 100%; margin-top: 10px;" onclick="loginProcess()">ยืนยันล็อกอิน</button>
+        </div>
+    </div>
+
+    <div class="modal" id="claimFormModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="toggleModal('claimFormModal', false)"><i class="fa-solid fa-xmark"></i></button>
+            <h3><i class="fa-solid fa-file-signature"></i> ยื่นคำขอติดต่อรับสิ่งของคืน</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">กรุณากรอกข้อมูลจริงเพื่อที่พี่ๆ สภานักเรียนจะได้สกรีนตรวจสอบและนัดหมายส่งคืนพัสดุครับ</p>
+            
+            <input type="hidden" id="claimFormItemIndex" value="">
+            
+            <div class="form-group">
+                <label>ชื่อ-นามสกุล ผู้รับของคืน</label>
+                <input type="text" id="claimFormUser" placeholder="เช่น นายรักเรียน ดีเลิศ" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div>
+                    <label>ชั้น ม.</label>
+                    <input type="text" id="claimFormClass" placeholder="เช่น 5/4" required>
+                </div>
+                <div>
+                    <label>เลขประจำตัวนักเรียน</label>
+                    <input type="text" id="claimFormId" placeholder="เช่น 55678" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>เบอร์โทรศัพท์ที่ติดต่อได้</label>
+                <input type="tel" id="claimFormPhone" placeholder="เช่น 0987654321" required>
+            </div>
+            <div class="form-group">
+                <label>ระบุหลักฐาน/ตำหนิสิ่งของเพิ่มเติม เพื่อยืนยันว่าเป็นเจ้าของ</label>
+                <textarea id="claimFormEvidence" rows="2" placeholder="เช่น หูฟังมีรอยขีดข่วนสีแดง, เคสโทรศัพท์ด้านหลังติดสติกเกอร์การ์ตูน"></textarea>
+            </div>
+            <div class="form-group">
+                <label>แนบรูปหลักฐานเพิ่มเติมเพื่อยืนยันสิทธิ์ (ถ้ามี)</label>
+                <div class="upload-zone" id="uploadZoneClaim" style="min-height: 110px; padding: 15px;" onclick="document.getElementById('claimFileInput').click()">
+                    <i class="fa-solid fa-image" id="uploadIconClaim" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <p id="uploadTextClaim" style="font-size: 12px;">คลิกเพื่อแนบรูปภาพหลักฐาน</p>
+                    <div class="file-preview" id="claimFilePreview" style="font-size: 12px; padding: 4px 10px;"></div>
+                    <input type="file" id="claimFileInput" style="display: none;" accept="image/*" onchange="handleClaimFileSelect(this)">
+                </div>
+            </div>
+            
+            <button type="button" class="btn btn-pink" style="width: 100%; margin-top: 5px;" onclick="submitStudentClaimRequest()">ส่งคำขอติดต่อรับของคืน</button>
+        </div>
+    </div>
+
+    <div class="modal" id="claimModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="toggleModal('claimModal', false)"><i class="fa-solid fa-xmark"></i></button>
+            <h3><i class="fa-solid fa-file-signature"></i> บันทึกข้อมูลผู้รับคืน</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">กรอกข้อมูลพัสดุชิ้นนี้คืนเพื่อเก็บลงในคลังประวัติ</p>
+            
+            <input type="hidden" id="claimItemComplaintIndex" value="">
+            <input type="hidden" id="claimItemName" value="">
+
+            <div class="form-group">
+                <label>ชื่อ-นามสกุล ผู้รับคืน</label>
+                <input type="text" id="claimUser" placeholder="ระบุชื่อนักเรียนที่มารับของ">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div>
+                    <label>ชั้น ม.</label>
+                    <input type="text" id="claimClass" placeholder="เช่น 4/2">
+                </div>
+                <div>
+                    <label>เลขประจำตัวนักเรียน</label>
+                    <input type="text" id="claimId" placeholder="เช่น 12345">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>เบอร์โทรติดต่อ</label>
+                <input type="tel" id="claimPhone" placeholder="ระบุเบอร์มือถือ">
+            </div>
+          
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="button" class="btn btn-pink" style="width: 100%;" onclick="submitClaimForm()">บันทึกส่งคืนสำเร็จ & จัดเก็บคลัง</button>
+                <button type="button" class="btn" style="width: 100%; background: #64748b; box-shadow: none;" onclick="skipClaimFormAndExecute()">ไม่กรอกข้อมูล, อัปเดตสถานะสถิติทันที</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="generalArchiveModal">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="toggleModal('generalArchiveModal', false)"><i class="fa-solid fa-xmark"></i></button>
+            <h3><i class="fa-solid fa-box-archive"></i> บันทึกปัญหาทั่วไปลงคลังประวัติ</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px;">ดำเนินการบันทึกข้อมูลปัญหาทั่วไปที่แก้ไขแล้ว เพื่อจัดเก็บเข้าคลังประวัติถาวร</p>
+            
+            <input type="hidden" id="genArchiveItemIndex" value="">
+
+            <div class="form-group">
+                <label>หมายเหตุ / สรุปการแก้ไขปัญหา</label>
+                <textarea id="genArchiveNote" rows="3" placeholder="เช่น ได้ประสานงานอาจารย์ฝ่ายอาคารสถานที่เข้ามาเคลียร์พื้นที่เรียบร้อยแล้ว"></textarea>
+            </div>
+          
+            <button type="button" class="btn btn-pink" style="width: 100%;" onclick="submitGeneralArchiveForm()">ย้ายบันทึกเข้าคลังประวัติ</button>
+        </div>
+    </div>
+
+    <div class="modal" id="evidenceModal" style="background: rgba(15, 23, 42, 0.65);">
+        <div class="modal-content" style="max-width: 520px; border-radius: 24px;">
+            <button class="modal-close-btn" onclick="toggleModal('evidenceModal', false)"><i class="fa-solid fa-xmark"></i></button>
+            <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-image" style="color:var(--ntun-blue);"></i> ตรวจสอบภาพหลักฐาน</h3>
+            
+            <div class="evidence-preview-container">
+                <div id="evidenceImgWrapper" style="display: none;">
+                    <img id="evidenceImageArea" src="" alt="Evidence Image" class="evidence-img-frame">
+                </div>
+                
+                <div id="evidenceLinkWrapper" style="display: none;">
+                    <div class="evidence-link-box">
+                        <i class="fa-solid fa-link"></i> <strong>ลิงก์อ้างอิงแนบมา:</strong><br>
+                        <span id="evidenceLinkArea" style="font-size: 13px;"></span>
+                    </div>
+                    <a id="evidenceLinkBtn" href="#" target="_blank" class="btn btn-sm" style="margin-bottom: 15px; width: 100%; background: #00b5ef;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดดูลิงก์ภายนอก
+                    </a>
+                </div>
+
+                <div id="evidenceEmptyWrapper" style="display: none; padding: 30px 0; color: var(--text-muted);">
+                    <i class="fa-solid fa-folder-open" style="font-size: 40px; margin-bottom: 10px; color: #cbd5e1;"></i>
+                    <p>รายการนี้ไม่มีการแนบหลักฐานรูปภาพเข้ามาครับ</p>
+                </div>
+            </div>
+            
+            <button type="button" class="btn" style="width: 100%; background: #64748b; box-shadow: none;" onclick="toggleModal('evidenceModal', false)">ปิดหน้าต่าง</button>
+        </div>
+    </div>
+
+    <div class="modal" id="adminDashboardModal" style="background: rgba(15, 23, 42, 0.6);">
+        <div class="modal-content" style="max-width: 1100px; width: 95%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 12px; gap: 10px; flex-wrap: wrap;">
+                <h2 style="margin: 0; font-size:1.3rem;"><i class="fa-solid fa-sliders"></i> Admin panel </h2>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn" style="padding: 6px 12px; font-size: 12px; background: #64748b; box-shadow: none;" onclick="minimizeAdmin()">พักหน้าต่าง</button>
+                    <button class="btn btn-pink" style="padding: 6px 12px; font-size: 12px;" onclick="logoutAdmin()">ออกจากระบบ</button>
+                </div>
+            </div>
+            
+            <div class="admin-nav-tabs">
+                <button class="admin-tab-btn active" id="tabBtn1" onclick="switchAdminTab(1)"><i class="fa-solid fa-circle-exclamation"></i> ร้องเรียนทั่วไป</button>
+                <button class="admin-tab-btn" id="tabBtn2" onclick="switchAdminTab(2)"><i class="fa-solid fa-box-open"></i> บอร์ดพัสดุของหาย</button>
+                <button class="admin-tab-btn" id="tabBtn4" onclick="switchAdminTab(4)"><i class="fa-solid fa-envelope-open-text"></i> คำขอติดต่อรับคืน <span id="adminClaimBadge" style="background: red; color: white; border-radius: 50%; padding: 1px 6px; font-size: 11px; display: none;">0</span></button>
+                <button class="admin-tab-btn" id="tabBtn3" onclick="switchAdminTab(3)"><i class="fa-solid fa-box-archive"></i> คลังประวัติ (Archive)</button>
+            </div>
+
+            <div id="adminTabContent1">
+                <div class="admin-section-header sub-category" style="border-left-color: #00b5ef;">
+                    <span class="header-title"><i class="fa-solid fa-screwdriver-wrench" style="color:#00b5ef;"></i> หมวดหมู่: อุปกรณ์ชำรุด</span>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDeleteSelected('อุปกรณ์ห้องเรียนพัง')"><i class="fa-solid fa-trash-can"></i> ลบรายการที่เลือก</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" onchange="toggleSelectAll('อุปกรณ์ห้องเรียนพัง', this.checked)"></th>
+                                <th>ผู้แจ้งเรื่อง</th>
+                                <th>หัวข้อปัญหา / รายละเอียด</th>
+                                <th>หลักฐานภาพ</th>
+                                <th>การจัดการสถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblRepairBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="admin-section-header sub-category" style="border-left-color: #ef4444;">
+                    <span class="header-title"><i class="fa-solid fa-smoking" style="color:#ef4444;"></i> หมวดหมู่: พฤติกรรมไม่เหมาะสม</span>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDeleteSelected('บุหรี่ไฟฟ้าในโรงเรียน')"><i class="fa-solid fa-trash-can"></i> ลบรายการที่เลือก</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" onchange="toggleSelectAll('บุหรี่ไฟฟ้าในโรงเรียน', this.checked)"></th>
+                                <th>ผู้แจ้งเรื่อง</th>
+                                <th>หัวข้อปัญหา / รายละเอียด</th>
+                                <th>หลักฐานภาพ</th>
+                                <th>การจัดการสถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblSmokingBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="admin-section-header sub-category" style="border-left-color: #f97316;">
+                    <span class="header-title"><i class="fa-solid fa-comment-dots" style="color:#f97316;"></i> หมวดหมู่: ปัญหาทั่วไป</span>
+                    <button class="btn btn-sm btn-danger" onclick="confirmDeleteSelected('ปัญหาทั่วไป')"><i class="fa-solid fa-trash-can"></i> ลบรายการที่เลือก</button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;"><input type="checkbox" onchange="toggleSelectAll('ปัญหาทั่วไป', this.checked)"></th>
+                                <th>ผู้แจ้งเรื่อง</th>
+                                <th>หัวข้อปัญหา / รายละเอียด</th>
+                                <th>หลักฐานภาพ</th>
+                                <th>การจัดการสถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblGeneralBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="adminTabContent2" style="display: none;">
+                <div class="admin-section-header" style="border-left-color: #a855f7;">
+                    <i class="fa-solid fa-boxes-stacked"></i> ศูนย์ควบคุมตรวจสอบพัสดุสิ่งของสูญหาย
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>สถานะหน้าบอร์ด</th>
+                                <th>ผู้พบเจอ</th>
+                                <th>พัสดุที่เก็บได้ / จุดที่พบ</th>
+                                <th>รูปหลักฐาน</th>
+                                <th>ควบคุมสถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lostItemTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="adminTabContent4" style="display: none;">
+                <div class="admin-section-header" style="border-left-color: #f59e0b;">
+                    <i class="fa-solid fa-id-card-clip"></i> ตรวจสอบคำขอเคลมรับพัสดุคืนของนักเรียน
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>พัสดุชิ้นที่แจ้งเคลม</th>
+                                <th>นักเรียนผู้ยื่นคำขอ</th>
+                                <th>เบอร์โทรติดต่อ</th>
+                                <th>รายละเอียดข้อพิสูจน์สิทธิ์</th>
+                                <th>การจัดการเคส</th>
+                            </tr>
+                        </thead>
+                        <tbody id="claimRequestsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="adminTabContent3" style="display: none;">
+                <div class="admin-section-header" style="border-left-color: #10b981;">
+                    <i class="fa-solid fa-clock-rotate-left"></i> ประวัติการส่งมอบของคืนและคลังจัดเก็บข้อมูลถาวร
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ประเภท</th>
+                                <th>รายละเอียดสิ่งของ / เรื่องราว</th>
+                                <th>นักเรียนผู้รับคืน / ผลการแก้ไข</th>
+                                <th>เบอร์โทรติดต่อ</th>
+                                <th>ผู้พบเจอ / ผู้แจ้งเรื่อง</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="archiveTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let complaints = [];
+        let archives = []; 
+        let claimRequests = []; 
+        let isAdminLoggedIn = false;
+        let currentUploadedDriveUrl = null;   // Drive URL ที่ได้หลัง upload สำเร็จ (แทน base64)
+        let currentClaimUploadedDriveUrl = null; 
+        let globalItemsToDelete = [];
+
+        // ============================================================
+        // ⚙️  ตั้งค่า Google Apps Script Web App URL ตรงนี้
+        //     หลัง Deploy แล้วให้วาง URL มาแทนที่ข้อความด้านล่าง
+        // ============================================================
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwHpr53XrnbVNMyFCGneguPlVQgp18_KQWk6XokhjECtMX-aDEqDMzSHzfpGyTFdBqX/exec";
+        // ============================================================
+
+        // ================= Google Sheets Integration =================
+
+        // ตัวแปรสำหรับ sync queue (กันกรณีส่งซ้อน)
+        let _syncQueue = Promise.resolve();
+
+        /**
+         * ดึงข้อมูลจาก Google Sheets sheet ที่ระบุ
+         * คืนค่าเป็น array ของ object (แถวละ 1 object)
+         */
+        async function fetchFromSheets(sheetName) {
+            if (!GAS_URL || GAS_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") return null;
+            return new Promise((resolve) => {
+                const cbName = '_cb_' + sheetName + '_' + Date.now();
+                const script = document.createElement('script');
+                const timeout = setTimeout(() => {
+                    cleanup();
+                    console.warn(`fetchFromSheets(${sheetName}) timeout`);
+                    resolve(null);
+                }, 10000);
+
+                function cleanup() {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = function(json) {
+                    cleanup();
+                    if (json && json.success) resolve(json.data);
+                    else { console.warn(`fetchFromSheets(${sheetName}) error:`, json && json.error); resolve(null); }
+                };
+
+                script.src = `${GAS_URL}?sheet=${encodeURIComponent(sheetName)}&callback=${cbName}`;
+                script.onerror = () => { cleanup(); console.warn(`fetchFromSheets(${sheetName}) script error`); resolve(null); };
+                document.head.appendChild(script);
+            });
+        }
+
+        /**
+         * ส่งข้อมูลไปเก็บใน Google Sheets
+         * action: 'append' | 'update' | 'delete'
+         */
+        /**
+         * ส่งข้อมูลไปบันทึกใน Google Sheets (imgData เป็น Drive URL แล้ว ไม่มี base64)
+         */
+        function postToSheets(sheetName, action, payload) {
+            if (!GAS_URL || GAS_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") return Promise.resolve();
+            _syncQueue = _syncQueue.then(() => {
+                const params = new URLSearchParams({
+                    write: '1',
+                    action: action,
+                    sheet: sheetName,
+                    payload: JSON.stringify(payload)
+                });
+
+                return fetch(`${GAS_URL}?${params.toString()}`, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    redirect: 'follow'
+                }).catch(e => console.warn('postToSheets error:', action, sheetName, e));
+            });
+            return _syncQueue;
+        }
+
+        // postToSheetsViaJsonp และ uploadFileToDrive ใช้ JSONP โดยตรงแยกต่างหากแล้ว
+
+        /**
+         * โหลดข้อมูลทั้งหมดจาก Sheets เมื่อเปิดหน้า
+         * ถ้า Sheets ยังไม่ได้ตั้งค่า จะ fallback ไปใช้ localStorage แทน
+         */
+        async function loadData() {
+            showLoadingBanner(true);
+
+            if (!GAS_URL || GAS_URL === "YOUR_APPS_SCRIPT_WEB_APP_URL_HERE") {
+                // fallback: localStorage
+                loadFromLocalStorage();
+                showLoadingBanner(false);
+                renderDashboardStats();
+                renderLostFoundBoard();
+                return;
+            }
+
+            try {
+                const [remoteComplaints, remoteArchives, remoteClaimReqs] = await Promise.all([
+                    fetchFromSheets('complaints'),
+                    fetchFromSheets('archives'),
+                    fetchFromSheets('claimRequests')
+                ]);
+
+                if (remoteComplaints !== null) {
+                    complaints = remoteComplaints.map(row => ({
+                        id:             Number(row.id) || 0,
+                        category:       row.category       || '',
+                        name:           row.name           || '',
+                        info:           row.info           || '',
+                        topic:          row.topic          || '',
+                        detail:         row.detail         || '',
+                        // รองรับทั้ง Drive URL (https://...) และ base64 (data:image/...)
+                        // ถ้าเป็น placeholder หรือว่างเปล่าให้เป็น null
+                        imgData:        (row.imgData && row.imgData !== '[รูปภาพ base64]' && row.imgData !== '[อัพโหลดไม่สำเร็จ]' && row.imgData.trim() !== '')
+                                            ? row.imgData : null,
+                        linkData:       row.linkData       || null,
+                        status:         row.status         || 'รออนุมัติ',
+                        lostItemStatus: row.lostItemStatus || 'รอเจ้าของมารับ'
+                    }));
+                } else {
+                    loadFromLocalStorage();
+                }
+
+                if (remoteArchives !== null) {
+                    archives = remoteArchives.map(row => ({
+                        itemCategory: row.type       || '',
+                        itemName:     row.itemName   || '',
+                        receiver:     row.receiver   || '',
+                        phone:        row.phone      || '',
+                        founder:      row.founder    || '',
+                        status:       row.status     || ''
+                    }));
+                }
+
+                if (remoteClaimReqs !== null) {
+                    claimRequests = remoteClaimReqs.map(row => ({
+                        complaintIndex: Number(row.complaintIndex) || 0,
+                        itemName:       row.itemName    || '',
+                        receiverName:   row.receiverName || '',
+                        receiverInfo:   row.receiverInfo || '',
+                        phone:          row.phone       || '',
+                        evidenceDetail: row.evidence    || '',
+                        // รองรับทั้ง Drive URL และ base64
+                        imgData:        (row.claimImgData && row.claimImgData !== '[รูปภาพ base64]' && row.claimImgData !== '[อัพโหลดไม่สำเร็จ]' && row.claimImgData.trim() !== '')
+                                            ? row.claimImgData : null
+                    }));
+                }
+
+                // sync ลง localStorage ด้วยเพื่อ offline fallback
+                saveToLocalStorage();
+            } catch (err) {
+                console.warn('loadData failed, using localStorage:', err);
+                loadFromLocalStorage();
+            }
+
+            showLoadingBanner(false);
+            renderDashboardStats();
+            renderLostFoundBoard();
+        }
+
+        function showLoadingBanner(show) {
+            const banner = document.getElementById('loadingBanner');
+            if (banner) banner.style.display = show ? 'flex' : 'none';
+        }
+
+        // ================= ส่วนฟังก์ชันบันทึกข้อมูลถาวร (LocalStorage) =================
+        function saveToLocalStorage() {
+            // ตัด imgData (base64) ออกก่อน save เพราะกินพื้นที่ localStorage มาก
+            // ข้อมูลจริงอยู่ใน Google Sheets แล้ว
+            const complaintsLite = complaints.map(c => {
+                const { imgData, ...rest } = c;
+                return rest;
+            });
+            const claimRequestsLite = claimRequests.map(r => {
+                const { imgData, ...rest } = r;
+                return rest;
+            });
+            try {
+                localStorage.setItem('ntun_complaints', JSON.stringify(complaintsLite));
+                localStorage.setItem('ntun_archives', JSON.stringify(archives));
+                localStorage.setItem('ntun_claimRequests', JSON.stringify(claimRequestsLite));
+            } catch(e) {
+                // ถ้า quota เต็มแม้ตัดรูปออกแล้ว ให้ล้าง cache เก่าแล้วลองใหม่
+                try {
+                    localStorage.removeItem('ntun_complaints');
+                    localStorage.removeItem('ntun_archives');
+                    localStorage.removeItem('ntun_claimRequests');
+                    localStorage.setItem('ntun_complaints', JSON.stringify(complaintsLite));
+                    localStorage.setItem('ntun_archives', JSON.stringify(archives));
+                    localStorage.setItem('ntun_claimRequests', JSON.stringify(claimRequestsLite));
+                } catch(e2) {
+                    console.warn('localStorage quota exceeded, skipping cache');
+                }
+            }
+        }
+
+        function loadFromLocalStorage() {
+            const localComplaints = localStorage.getItem('ntun_complaints');
+            const localArchives = localStorage.getItem('ntun_archives');
+            const localClaimRequests = localStorage.getItem('ntun_claimRequests');
+
+            if (localComplaints) complaints = JSON.parse(localComplaints);
+            if (localArchives) archives = JSON.parse(localArchives);
+            if (localClaimRequests) claimRequests = JSON.parse(localClaimRequests);
+        }
+        // =========================================================================
+
+        // โหลดข้อมูลอัตโนมัติทันทีเมื่อเปิด/รีเฟรชหน้าเว็บ
+        loadData();
+
+        function toggleModal(modalId, show) {
+            const modal = document.getElementById(modalId);
+            if(modal) {
+                if(show) modal.classList.add('active');
+                else modal.classList.remove('active');
+            }
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('successToast');
+            document.getElementById('toastText').innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3500);
+        }
+
+        // ============================================================
+        // 🖼️  ImgBB API Key — สมัครฟรีได้ที่ https://api.imgbb.com
+        //     วาง API Key ของคุณแทนที่ข้อความด้านล่าง
+        // ============================================================
+        const IMGBB_API_KEY = "5fbc8eb1b0c31f81fc9bb0d2a437fb66";
+        // ============================================================
+
+        /**
+         * อัพโหลดรูปไป ImgBB (ฟรี) แล้วได้ URL กลับมาเลย
+         * ไม่ต้องแตะ Apps Script เพิ่มเติม
+         */
+        async function uploadFileToDrive(file, prefix) {
+            try {
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const res = await fetch(
+                    `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+                    { method: 'POST', body: formData }
+                );
+                const json = await res.json();
+
+                if (json.success) {
+                    return json.data.url; // URL รูปภาพที่ดูได้สาธารณะ
+                } else {
+                    console.warn('ImgBB upload failed:', json);
+                    return null;
+                }
+            } catch (e) {
+                console.warn('uploadFileToDrive error:', e);
+                return null;
+            }
+        }
+
+        function setUploadZoneState(zoneId, iconId, textId, previewId, state, message) {
+            const zone = document.getElementById(zoneId);
+            const icon = document.getElementById(iconId);
+            const text = document.getElementById(textId);
+            const preview = document.getElementById(previewId);
+
+            // ปิด click ระหว่าง uploading
+            zone.style.pointerEvents = state === 'uploading' ? 'none' : '';
+
+            if (state === 'uploading') {
+                icon.className = 'fa-solid fa-spinner fa-spin';
+                icon.style.color = 'var(--ntun-blue)';
+                text.textContent = 'กำลังอัพโหลดรูปไป Drive...';
+                preview.style.display = 'none';
+                preview.textContent = '';
+            } else if (state === 'success') {
+                icon.className = 'fa-solid fa-circle-check';
+                icon.style.color = '#10b981';
+                text.textContent = 'คลิกเพื่อเปลี่ยนรูปภาพ';
+                preview.style.display = 'inline-block';
+                preview.textContent = '✅ ' + (message || 'อัพโหลดสำเร็จ');
+            } else if (state === 'error') {
+                icon.className = 'fa-solid fa-circle-xmark';
+                icon.style.color = '#ef4444';
+                text.textContent = 'อัพโหลดไม่สำเร็จ คลิกเพื่อลองใหม่';
+                preview.style.display = 'inline-block';
+                preview.textContent = '❌ ' + (message || 'เกิดข้อผิดพลาด');
+            } else { // idle / reset
+                icon.className = zoneId === 'uploadZoneClaim' ? 'fa-solid fa-image' : 'fa-solid fa-cloud-arrow-up';
+                icon.style.color = '';
+                if (zoneId === 'uploadZoneClaim') icon.style.fontSize = '24px';
+                text.textContent = zoneId === 'uploadZoneClaim' ? 'คลิกเพื่อแนบรูปภาพหลักฐาน' : 'คลิกเพื่อเลือกไฟล์รูปภาพหลักฐาน';
+                preview.style.display = 'none';
+                preview.textContent = '';
+            }
+        }
+
+        async function handleFileSelect(input) {
+            if (!input.files || !input.files[0]) {
+                currentUploadedDriveUrl = null;
+                setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'idle');
+                return;
+            }
+
+            if (!GAS_URL || GAS_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                // fallback: ถ้ายังไม่ได้ตั้ง GAS_URL ใช้ base64 ชั่วคราว
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentUploadedDriveUrl = e.target.result;
+                    setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'success', 'แนบรูปภาพแล้ว (local)');
+                };
+                reader.readAsDataURL(input.files[0]);
+                return;
+            }
+
+            setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'uploading');
+
+            const url = await uploadFileToDrive(input.files[0], 'evidence');
+            if (url) {
+                currentUploadedDriveUrl = url;
+                setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'success', 'อัพโหลดไป Drive แล้ว');
+            } else {
+                currentUploadedDriveUrl = null;
+                input.value = '';
+                setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'error', 'อัพโหลดไม่สำเร็จ ลองใหม่อีกครั้ง');
+            }
+        }
+
+        async function handleClaimFileSelect(input) {
+            if (!input.files || !input.files[0]) {
+                currentClaimUploadedDriveUrl = null;
+                setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'idle');
+                return;
+            }
+
+            if (!GAS_URL || GAS_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentClaimUploadedDriveUrl = e.target.result;
+                    setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'success', 'แนบรูปภาพแล้ว (local)');
+                };
+                reader.readAsDataURL(input.files[0]);
+                return;
+            }
+
+            setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'uploading');
+
+            const url = await uploadFileToDrive(input.files[0], 'claim');
+            if (url) {
+                currentClaimUploadedDriveUrl = url;
+                setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'success', 'อัพโหลดไป Drive แล้ว');
+            } else {
+                currentClaimUploadedDriveUrl = null;
+                input.value = '';
+                setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'error', 'อัพโหลดไม่สำเร็จ ลองใหม่อีกครั้ง');
+            }
+        }
+
+        function selectCategory(element, value, themeColor) {
+            document.querySelectorAll('.category-big-card').forEach(card => {
+                card.classList.remove('selected-blue', 'selected-purple', 'selected-red', 'selected-orange');
+            });
+            element.classList.add('selected-' + themeColor);
+            document.getElementById('selectedCategoryValue').value = value;
+
+            const label = document.getElementById('evidenceLabel');
+            const anonCheckbox = document.getElementById('isAnonymous');
+            const titleInput = document.getElementById('issueTopic');
+            
+            if (titleInput) {
+                switch (value) {
+                    case 'อุปกรณ์ห้องเรียนพัง':
+                        titleInput.placeholder = "ระบุข้อ เช่น พัดลมห้องพัง, ไฟห้องน้ำดับ, ประตูชำรุด";
+                        break;
+                    case 'แจ้งเก็บของได้':
+                        titleInput.placeholder = "ระบุข้อ เช่น เจอหูฟังตกที่โรงอาหาร, พบกระเป๋าสตางค์สีดำ";
+                        break;
+                    case 'บุหรี่ไฟฟ้าในโรงเรียน':
+                        titleInput.placeholder = "ระบุข้อ เช่น พบเห็นการสูบบุหรี่หลังอาคารเรียน, ทะเลาะวิวาท";
+                        break;
+                    case 'ปัญหาทั่วไป':
+                        titleInput.placeholder = "ระบุข้อ เช่น ข้อเสนอแนะเรื่องอาหาร, แจ้งเรื่องขยะในโรงเรียน";
+                        break;
+                    default:
+                        titleInput.placeholder = "ระบุหัวข้อปัญหา / สิ่งของที่พบ";
+                }
+            }
+
+            if (value === 'แจ้งเก็บของได้') {
+                label.innerHTML = 'แนบรูปภาพหลักฐาน <span style="color: #ef4444; font-weight: bold;">(จำเป็นต้องใส่รูปภาพ)</span>';
+                if (anonCheckbox.checked) {
+                    anonCheckbox.checked = false;
+                    toggleAnonymous(anonCheckbox);
+                    toggleModal('anonymousBlockedModal', true);
+                }
+            } else {
+                label.innerHTML = 'แนบรูปภาพหรือลิงก์หลักฐาน (ไม่บังคับ)';
+            }
+        }
+
+        function toggleAnonymous(checkbox) {
+            const currentCat = document.getElementById('selectedCategoryValue').value;
+            if (currentCat === 'แจ้งเก็บของได้' && checkbox.checked) {
+                checkbox.checked = false; 
+                toggleModal('anonymousBlockedModal', true);
+                return;
+            }
+
+            const nameField = document.getElementById('studentName');
+            const classField = document.getElementById('studentClass');
+            const idField = document.getElementById('studentId');
+
+            if(checkbox.checked) {
+                nameField.removeAttribute('required');
+                nameField.placeholder = "🔒 ระบบซ่อนรายชื่อแล้ว";
+                nameField.disabled = true;
+                nameField.value = "";
+                classField.removeAttribute('required');
+                classField.placeholder = "🔒 ล็อค";
+                classField.disabled = true;
+                classField.value = "";
+                idField.removeAttribute('required');
+                idField.placeholder = "🔒 ล็อค";
+                idField.disabled = true;
+                idField.value = "";
+            } else {
+                nameField.setAttribute('required', 'required');
+                nameField.placeholder = "เช่น นายสมชาย นามสมมุติ";
+                nameField.disabled = false;
+                classField.setAttribute('required', 'required');
+                classField.placeholder = "เช่น 4/1"; 
+                classField.disabled = false;
+                idField.setAttribute('required', 'required');
+                idField.placeholder = "เช่น 12345";
+                idField.disabled = false;
+            }
+        }
+
+        function closeAnonymousBlockedModal() {
+            toggleModal('anonymousBlockedModal', false);
+            const anonCheckbox = document.getElementById('isAnonymous');
+            anonCheckbox.checked = false;
+            toggleAnonymous(anonCheckbox);
+        }
+
+        function submitReport() {
+            const isAnonymous = document.getElementById('isAnonymous').checked;
+            const name = isAnonymous ? "ผู้ไม่ประสงค์ออกนาม" : document.getElementById('studentName').value;
+            const sClass = document.getElementById('studentClass').value;
+            const sId = document.getElementById('studentId').value;
+            const category = document.getElementById('selectedCategoryValue').value; 
+            const topic = document.getElementById('issueTopic').value;
+            const location = document.getElementById('issueLocation').value;
+            const detail = document.getElementById('issueDetail').value;
+            const driveUrl = document.getElementById('driveUrl').value;
+
+            if((!isAnonymous && !name) || (!isAnonymous && !sClass) || (!isAnonymous && !sId) || !category || !topic) {
+                alert('กรุณากรอกข้อมูลส่วนตัวและเลือกหมวดหมู่ให้ครบถ้วนก่อนส่งครับ');
+                return;
+            }
+
+            if(category === 'แจ้งเก็บของได้' && !currentUploadedDriveUrl && driveUrl.trim() === "") {
+                toggleModal('validationAlertModal', true);
+                return;
+            }
+
+            let combinedDetail = "";
+            if (location.trim() !== "") {
+                combinedDetail += `📍 สถานที่: ${location}`;
+            }
+            if (detail.trim() !== "") {
+                combinedDetail += combinedDetail !== "" ? ` | 📝 รายละเอียด: ${detail}` : detail;
+            }
+
+            const dataObject = {
+                id: complaints.length + 1,
+                category: category,
+                name: name,
+                info: isAnonymous ? "" : `ม.${sClass} (รหัส ${sId})`,
+                topic: topic,
+                detail: combinedDetail !== "" ? combinedDetail : "ไม่มีรายละเอียดเพิ่มเติม",
+                imgData: currentUploadedDriveUrl,   // Drive URL ที่ upload ไปแล้วล่วงหน้า
+                linkData: driveUrl.trim() !== "" ? driveUrl.trim() : null,
+                status: "รออนุมัติ",
+                lostItemStatus: "รอเจ้าของมารับ" 
+            };
+
+            complaints.push(dataObject);
+
+            saveToLocalStorage();
+            // ส่งข้อมูลไปบันทึกใน Google Sheets (imgData เป็น Drive URL แล้ว ไม่มี base64)
+            postToSheets('complaints', 'append', dataObject);
+
+            showToast('ส่งเรื่องเรียบร้อย รอแอดมินอนุมัติข้อมูลครับ');
+            document.getElementById('reportForm').reset();
+            setUploadZoneState('uploadZoneMain', 'uploadIconMain', 'uploadTextMain', 'filePreview', 'idle');
+            currentUploadedDriveUrl = null;
+            
+            const nameField = document.getElementById('studentName');
+            nameField.removeAttribute('disabled');
+            nameField.setAttribute('required', 'required');
+            nameField.placeholder = "เช่น นายสมชาย นามสมมุติ";
+
+            const classField = document.getElementById('studentClass');
+            classField.removeAttribute('disabled');
+            classField.setAttribute('required', 'required');
+            classField.placeholder = "เช่น 4/1";
+
+            const idField = document.getElementById('studentId');
+            idField.removeAttribute('disabled');
+            idField.setAttribute('required', 'required');
+            idField.placeholder = "เช่น 12345";
+
+            const titleInput = document.getElementById('issueTopic');
+            if (titleInput) titleInput.placeholder = "ระบุหัวข้อปัญหา / สิ่งของที่พบ";
+
+            document.querySelectorAll('.category-big-card').forEach(card => card.classList.remove('selected-blue', 'selected-purple', 'selected-red', 'selected-orange'));
+            document.getElementById('selectedCategoryValue').value = "";
+            
+            renderDashboardStats();
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function renderDashboardStats() {
+            const approvedComplaints = complaints.filter(c => c.status !== 'รออนุมัติ');
+            
+            const doneCasesCount = approvedComplaints.filter(c => 
+                c.status === 'แก้ไขสำเร็จแล้ว' || 
+                c.status === 'จัดเก็บแล้ว' || 
+                (c.category === 'แจ้งเก็บของได้' && c.lostItemStatus === 'มีคนมารับแล้ว')
+            ).length;
+
+            document.getElementById('statTotal').innerText = approvedComplaints.length + " รายการ";
+            document.getElementById('statProgress').innerText = approvedComplaints.filter(c => c.status === 'กำลังดำเนินการ' && !(c.category === 'แจ้งเก็บของได้' && c.lostItemStatus === 'มีคนมารับแล้ว')).length + " รายการ";
+            document.getElementById('statForward').innerText = approvedComplaints.filter(c => c.status === 'ส่งต่อหน่วยงานอื่น').length + " รายการ";
+            document.getElementById('statDone').innerText = doneCasesCount + " รายการ";
+        }
+
+        function renderLostFoundBoard() {
+            const board = document.getElementById('lostFoundBoard');
+            board.innerHTML = "";
+            
+            complaints.forEach((item, index) => {
+                if (item.category === 'แจ้งเก็บของได้' && item.status !== 'รออนุมัติ' && item.status !== 'จัดเก็บแล้ว') {
+                    const newCard = document.createElement('div');
+                    newCard.className = "lost-item-card";
+                    
+                    let statusBadge = item.lostItemStatus === 'มีคนมารับแล้ว'
+                        ? `<span class="lost-item-time status-found">🔴 มีคนมารับแล้ว</span>` 
+                        : `<span class="lost-item-time status-searching">🟡 รอเจ้าของมารับ</span>`;
+
+                    let actionBtnUI = "";
+                    if (item.lostItemStatus !== 'มีคนมารับแล้ว') {
+                        actionBtnUI = `
+                            <button type="button" class="btn btn-pink" style="width:100%; text-align:center; padding:10px; font-size:13px; border-radius:8px; margin-top:5px;" onclick="openClaimFormModal(${index})">
+                                <i class="fa-solid fa-bell"></i> ติดต่อขอรับสิ่งของคืน
+                            </button>
+                        `;
+                    }
+
+                    newCard.innerHTML = `
+                        <div class="lost-item-header">
+                            <span class="lost-item-tag">📦 พัสดุของหาย</span>
+                            ${statusBadge}
+                        </div>
+                        <div class="lost-item-title">${item.topic}</div>
+                        <div class="lost-item-detail">${item.detail}</div>
+                        <div style="margin-top: 4px; display:flex; flex-direction:column; gap:5px;">
+                            <button type="button" class="btn btn-view-evidence" style="width:100%; text-align:center; padding:10px;" onclick="viewEvidencePopup(${index})">
+                                <i class="fa-solid fa-image"></i> 👁️ ดูรูปสิ่งของ
+                            </button>
+                            ${actionBtnUI}
+                        </div>
+                        <div class="lost-item-meta">
+                            <span>📍 ผู้พบเจอ: ${item.name}</span>
+                        </div>
+                    `;
+                    board.appendChild(newCard);
+                }
+            });
+            
+            if(board.children.length === 0) {
+                board.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size:14px;">ขณะนี้ยังไม่มีประกาศสิ่งของสูญหายบนบอร์ดครับ</div>`;
+            }
+        }
+
+        function openClaimFormModal(index) {
+            document.getElementById('claimFormItemIndex').value = index;
+            setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'idle');
+            currentClaimUploadedDriveUrl = null;
+            toggleModal('claimFormModal', true);
+        }
+
+        function submitStudentClaimRequest() {
+            const compIndex = parseInt(document.getElementById('claimFormItemIndex').value);
+            const user = document.getElementById('claimFormUser').value;
+            const cls = document.getElementById('claimFormClass').value;
+            const id = document.getElementById('claimFormId').value;
+            const phone = document.getElementById('claimFormPhone').value;
+            const evidence = document.getElementById('claimFormEvidence').value;
+
+            if(!user || !cls || !id || !phone) {
+                alert('กรุณากรอกข้อมูลส่วนตัวและเบอร์โทรติดต่อให้ครบถ้วนก่อนส่งคำขอครับ');
+                return;
+            }
+
+            const claimObject = {
+                complaintIndex: compIndex,
+                itemName: complaints[compIndex].topic,
+                receiverName: user,
+                receiverInfo: `ม.${cls} (รหัส ${id})`,
+                phone: phone,
+                evidenceDetail: evidence ? evidence : 'ไม่ได้ระบุรายละเอียดเพิ่มเติม',
+                imgData: currentClaimUploadedDriveUrl  // Drive URL แล้ว
+            };
+
+            claimRequests.push(claimObject);
+
+            saveToLocalStorage();
+            postToSheets('claimRequests', 'append', {
+                complaintIndex: claimObject.complaintIndex,
+                itemName:       claimObject.itemName,
+                receiverName:   claimObject.receiverName,
+                receiverInfo:   claimObject.receiverInfo,
+                phone:          claimObject.phone,
+                evidence:       claimObject.evidenceDetail,
+                claimImgData:   claimObject.imgData  // Drive URL แล้ว ไม่มี base64
+            });
+
+            toggleModal('claimFormModal', false);
+            showToast('ส่งข้อมูลคำขอติดต่อรับคืนแล้ว! พี่ๆ สภาฯ จะเร่งตรวจสอบให้ครับ');
+
+            document.getElementById('claimFormUser').value = "";
+            document.getElementById('claimFormClass').value = "";
+            document.getElementById('claimFormId').value = "";
+            document.getElementById('claimFormPhone').value = "";
+            document.getElementById('claimFormEvidence').value = "";
+            document.getElementById('claimFileInput').value = "";
+            setUploadZoneState('uploadZoneClaim', 'uploadIconClaim', 'uploadTextClaim', 'claimFilePreview', 'idle');
+            currentClaimUploadedDriveUrl = null;
+
+            renderAdminTables();
+        }
+
+        function openAdminPanel() {
+            if(isAdminLoggedIn) toggleModal('adminDashboardModal', true);
+            else toggleModal('loginModal', true);
+        }
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('adminPass');
+            const eye = document.getElementById('eyeIcon');
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eye.className = 'fa-solid fa-eye-slash toggle-password';
+            } else {
+                passInput.type = 'password';
+                eye.className = 'fa-solid fa-eye toggle-password';
+            }
+        }
+
+        function loginProcess() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+
+            if(user === 'studentcouncil' && pass === 'wearescntun') {
+                isAdminLoggedIn = true; 
+                toggleModal('loginModal', false);
+                // โหลดข้อมูลสดจาก Sheets เมื่อ admin เข้าสู่ระบบ
+                loadData().then(() => {
+                    renderAdminTables();
+                    toggleModal('adminDashboardModal', true);
+                });
+                document.getElementById('adminUser').value = '';
+                document.getElementById('adminPass').value = '';
+                document.getElementById('adminPass').type = 'password';
+            } else {
+                alert('Username หรือ Password ไม่ถูกต้อง!');
+            }
+        }
+
+        function minimizeAdmin() { toggleModal('adminDashboardModal', false); }
+        function logoutAdmin() { isAdminLoggedIn = false; toggleModal('adminDashboardModal', false); }
+
+        function switchAdminTab(tabIndex) {
+            document.getElementById('adminTabContent1').style.display = 'none';
+            document.getElementById('adminTabContent2').style.display = 'none';
+            document.getElementById('adminTabContent3').style.display = 'none';
+            document.getElementById('adminTabContent4').style.display = 'none';
+            document.getElementById('tabBtn1').classList.remove('active');
+            document.getElementById('tabBtn2').classList.remove('active');
+            document.getElementById('tabBtn3').classList.remove('active');
+            document.getElementById('tabBtn4').classList.remove('active');
+
+            if(tabIndex === 1) {
+                document.getElementById('adminTabContent1').style.display = 'block';
+                document.getElementById('tabBtn1').classList.add('active');
+            } else if(tabIndex === 2) {
+                document.getElementById('adminTabContent2').style.display = 'block';
+                document.getElementById('tabBtn2').classList.add('active');
+            } else if(tabIndex === 3) {
+                document.getElementById('adminTabContent3').style.display = 'block';
+                document.getElementById('tabBtn3').classList.add('active');
+            } else if(tabIndex === 4) {
+                document.getElementById('adminTabContent4').style.display = 'block';
+                document.getElementById('tabBtn4').classList.add('active');
+            }
+        }
+
+        function viewEvidencePopup(index) {
+            const target = complaints[index];
+            if (!target) return;
+            
+            document.getElementById('evidenceImgWrapper').style.display = 'none';
+            document.getElementById('evidenceLinkWrapper').style.display = 'none';
+            document.getElementById('evidenceEmptyWrapper').style.display = 'none';
+
+            if (target.imgData) {
+                // รองรับทั้ง base64 (data:image/...) และ Drive URL (https://...)
+                const imgEl = document.getElementById('evidenceImageArea');
+                imgEl.src = target.imgData;
+                imgEl.onerror = function() {
+                    // ถ้า embed ตรงไม่ได้ (Drive permission issue) → แสดงปุ่มเปิดลิงก์แทน
+                    document.getElementById('evidenceImgWrapper').style.display = 'none';
+                    const linkWrapper = document.getElementById('evidenceLinkWrapper');
+                    document.getElementById('evidenceLinkArea').innerText = target.imgData;
+                    document.getElementById('evidenceLinkBtn').href = target.imgData;
+                    linkWrapper.style.display = 'block';
+                };
+                document.getElementById('evidenceImgWrapper').style.display = 'block';
+            } 
+            if (target.linkData) {
+                document.getElementById('evidenceLinkArea').innerText = target.linkData;
+                document.getElementById('evidenceLinkBtn').href = target.linkData;
+                document.getElementById('evidenceLinkWrapper').style.display = 'block';
+            }
+            if (!target.imgData && !target.linkData) {
+                document.getElementById('evidenceEmptyWrapper').style.display = 'block';
+            }
+            toggleModal('evidenceModal', true);
+        }
+
+        function viewClaimEvidencePopup(reqIndex) {
+            const target = claimRequests[reqIndex];
+            if (!target) return;
+
+            document.getElementById('evidenceImgWrapper').style.display = 'none';
+            document.getElementById('evidenceLinkWrapper').style.display = 'none';
+            document.getElementById('evidenceEmptyWrapper').style.display = 'none';
+
+            if (target.imgData) {
+                const imgEl = document.getElementById('evidenceImageArea');
+                imgEl.src = target.imgData;
+                imgEl.onerror = function() {
+                    document.getElementById('evidenceImgWrapper').style.display = 'none';
+                    document.getElementById('evidenceLinkArea').innerText = target.imgData;
+                    document.getElementById('evidenceLinkBtn').href = target.imgData;
+                    document.getElementById('evidenceLinkWrapper').style.display = 'block';
+                };
+                document.getElementById('evidenceImgWrapper').style.display = 'block';
+            } else {
+                document.getElementById('evidenceEmptyWrapper').style.display = 'block';
+            }
+            toggleModal('evidenceModal', true);
+        }
+
+        function approveComplaint(index) {
+            complaints[index].status = "กำลังดำเนินการ";
+            saveToLocalStorage();
+            // sync สถานะไป Sheets (row index ใน sheet = index + 2 เพราะมี header)
+            postToSheets('complaints', 'update', { rowIndex: index, colName: 'status', value: 'กำลังดำเนินการ' });
+            showToast('อนุมัติเรื่องเข้าสู่ระบบแล้ว!');
+            renderDashboardStats();
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function openArchiveModal(index) {
+            const item = complaints[index];
+            document.getElementById('claimItemName').value = item.topic;
+            document.getElementById('claimItemComplaintIndex').value = index;
+            toggleModal('claimModal', true);
+        }
+
+        function openGeneralArchiveModal(index) {
+            document.getElementById('genArchiveItemIndex').value = index;
+            document.getElementById('genArchiveNote').value = "";
+            toggleModal('generalArchiveModal', true);
+        }
+
+        function submitGeneralArchiveForm() {
+            const compIndex = parseInt(document.getElementById('genArchiveItemIndex').value);
+            const note = document.getElementById('genArchiveNote').value;
+
+            const targetItem = complaints[compIndex];
+            const archiveObj = {
+                itemCategory: "📝 ปัญหาทั่วไปได้รับการแก้ไข",
+                itemName: targetItem.topic,
+                receiver: note ? note : "แก้ไขเสร็จสิ้นเรียบร้อยแล้ว",
+                phone: "-",
+                founder: `${targetItem.name} ${targetItem.info}`
+            };
+            archives.push(archiveObj);
+
+            complaints[compIndex].status = "จัดเก็บแล้ว";
+            saveToLocalStorage();
+            postToSheets('archives', 'append', { type: archiveObj.itemCategory, itemName: archiveObj.itemName, receiver: archiveObj.receiver, phone: archiveObj.phone, founder: archiveObj.founder, status: 'จัดเก็บแล้ว' });
+            postToSheets('complaints', 'update', { rowIndex: compIndex, colName: 'status', value: 'จัดเก็บแล้ว' });
+
+            if(typeof saveDataOnline === 'function') {
+                saveDataOnline(compIndex, 'archive', archiveObj);
+            }
+
+            toggleModal('generalArchiveModal', false);
+            showToast('✅ ย้ายปัญหาทั่วไปเข้าคลังประวัติถาวรสำเร็จ!');
+            
+            renderDashboardStats();
+            renderAdminTables();
+        }
+
+        function submitClaimForm() {
+            const compIndex = parseInt(document.getElementById('claimItemComplaintIndex').value);
+            const user = document.getElementById('claimUser').value;
+            const cls = document.getElementById('claimClass').value;
+            const id = document.getElementById('claimId').value;
+            const phone = document.getElementById('claimPhone').value;
+
+            if(!user || !cls || !id || !phone) {
+                alert('กรุณากรอกเบอร์โทรและข้อมูลผู้รับคืนให้ครบถ้วน!');
+                return;
+            }
+
+            const targetItem = complaints[compIndex];
+            const archiveObj = {
+                itemCategory: "📦 พัสดุของหายได้รับคืน",
+                itemName: targetItem.topic,
+                receiver: `${user} (ม.${cls} เลขประจำตัว:${id})`,
+                phone: phone,
+                founder: `${targetItem.name} ${targetItem.info}`
+            };
+            archives.push(archiveObj);
+
+            complaints[compIndex].status = "จัดเก็บแล้ว";
+            saveToLocalStorage();
+            postToSheets('archives', 'append', { type: archiveObj.itemCategory, itemName: archiveObj.itemName, receiver: archiveObj.receiver, phone: archiveObj.phone, founder: archiveObj.founder, status: 'จัดเก็บแล้ว' });
+            postToSheets('complaints', 'update', { rowIndex: compIndex, colName: 'status', value: 'จัดเก็บแล้ว' });
+
+            toggleModal('claimModal', false);
+            showToast('✅ บันทึกข้อมูลประวัติผู้รับคืนสำเร็จ!');
+            
+            document.getElementById('claimUser').value = "";
+            document.getElementById('claimClass').value = "";
+            document.getElementById('claimId').value = "";
+            document.getElementById('claimPhone').value = "";
+            
+            renderDashboardStats();
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function skipClaimFormAndExecute() {
+            const compIndex = parseInt(document.getElementById('claimItemComplaintIndex').value);
+            if (isNaN(compIndex)) return;
+
+            complaints[compIndex].status = "จัดเก็บแล้ว";
+            saveToLocalStorage();
+            postToSheets('complaints', 'update', { rowIndex: compIndex, colName: 'status', value: 'จัดเก็บแล้ว' });
+            toggleModal('claimModal', false);
+            showToast('✅ อัปเดตสถานะและสรุปสถิติเรียบร้อยแล้ว!');
+            
+            renderDashboardStats();
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function approveClaimRequest(reqIndex) {
+            const req = claimRequests[reqIndex];
+            const targetItem = complaints[req.complaintIndex];
+
+            const archiveObj = {
+                itemCategory: "📦 พัสดุของหายได้รับคืน",
+                itemName: req.itemName,
+                receiver: `${req.receiverName} (${req.receiverInfo})`,
+                phone: req.phone,
+                founder: `${targetItem.name} ${targetItem.info}`
+            };
+            archives.push(archiveObj);
+
+            complaints[req.complaintIndex].status = "จัดเก็บแล้ว";
+            complaints[req.complaintIndex].lostItemStatus = "มีคนมารับแล้ว";
+            claimRequests = claimRequests.filter(item => item.complaintIndex !== req.complaintIndex);
+
+            saveToLocalStorage();
+            postToSheets('archives', 'append', { type: archiveObj.itemCategory, itemName: archiveObj.itemName, receiver: archiveObj.receiver, phone: archiveObj.phone, founder: archiveObj.founder, status: 'จัดเก็บแล้ว' });
+            postToSheets('complaints', 'update', { rowIndex: req.complaintIndex, colName: 'status', value: 'จัดเก็บแล้ว' });
+            postToSheets('complaints', 'update', { rowIndex: req.complaintIndex, colName: 'lostItemStatus', value: 'มีคนมารับแล้ว' });
+
+            showToast('✅ อนุมัติส่งคืนของหายและบันทึกลงคลังสำเร็จ!');
+            renderDashboardStats();
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function updateLostItemStatus(index, newLostStatus) {
+            complaints[index].lostItemStatus = newLostStatus;
+            saveToLocalStorage();
+            postToSheets('complaints', 'update', { rowIndex: index, colName: 'lostItemStatus', value: newLostStatus });
+            showToast(`ปรับสถานะพัสดุเป็น: ${newLostStatus}`);
+            renderDashboardStats(); 
+            renderLostFoundBoard();
+            renderAdminTables();
+        }
+
+        function updateGeneralStatus(index, newStatus) {
+            complaints[index].status = newStatus;
+            saveToLocalStorage();
+            postToSheets('complaints', 'update', { rowIndex: index, colName: 'status', value: newStatus });
+            renderDashboardStats();
+            renderAdminTables();
+            showToast('อัปเดตสถานะความคืบหน้าแล้ว!');
+        }
+
+        function toggleSelectAll(category, checked) {
+            const checkboxes = document.querySelectorAll(`.chk-del-${getCategorySelector(category)}`);
+            checkboxes.forEach(chk => {
+                if(!chk.disabled) chk.checked = checked;
+            });
+        }
+
+        function getCategorySelector(category) {
+            if(category === 'อุปกรณ์ห้องเรียนพัง') return 'repair';
+            if(category === 'บุหรี่ไฟฟ้าในโรงเรียน') return 'smoking';
+            return 'general';
+        }
+
+        function confirmDeleteSelected(category) {
+            const selector = getCategorySelector(category);
+            const checkboxes = document.querySelectorAll(`.chk-del-${selector}:checked`);
+            
+            if(checkboxes.length === 0) {
+                alert('กรุณาเลือกรายการ (Checkbox) ที่ต้องการลบก่อนครับ');
+                return;
+            }
+
+            globalItemsToDelete = [];
+            let previewHtml = "";
+
+            checkboxes.forEach(chk => {
+                const index = parseInt(chk.value);
+                globalItemsToDelete.push(index);
+                previewHtml += `<div class="delete-list-item">📌 <b>${complaints[index].topic}</b> (${complaints[index].name})</div>`;
+            });
+
+            document.getElementById('deleteListPreviewArea').innerHTML = previewHtml;
+            toggleModal('deleteConfirmModal', true);
+        }
+
+        function executeDeleteSelectedComplaints() {
+            // ส่งคำสั่งลบไป Sheets (ใช้ index ที่ sort desc เพื่อกันแถวเลื่อน)
+            postToSheets('complaints', 'delete', { rowIndexes: [...globalItemsToDelete] });
+
+            complaints = complaints.filter((_, idx) => !globalItemsToDelete.includes(idx));
+            saveToLocalStorage();
+            toggleModal('deleteConfirmModal', false);
+            showToast('🗑️ ลบรายการปัญหาที่เลือกเสร็จสิ้นเรียบร้อย!');
+            
+            globalItemsToDelete = [];
+            renderDashboardStats();
+            renderAdminTables();
+        }
+
+        function renderAdminTables() {
+            const tblRepair = document.getElementById('tblRepairBody');
+            const tblSmoking = document.getElementById('tblSmokingBody');
+            const tblGeneral = document.getElementById('tblGeneralBody');
+            const lostBody = document.getElementById('lostItemTableBody');
+            const archiveBody = document.getElementById('archiveTableBody');
+            const claimRequestsBody = document.getElementById('claimRequestsTableBody');
+            const claimBadge = document.getElementById('adminClaimBadge');
+            
+            tblRepair.innerHTML = "";
+            tblSmoking.innerHTML = "";
+            tblGeneral.innerHTML = "";
+            lostBody.innerHTML = "";
+            archiveBody.innerHTML = "";
+            claimRequestsBody.innerHTML = "";
+            
+            let repairCount = 0;
+            let smokingCount = 0;
+            let generalCount = 0;
+            let lostCount = 0;
+
+            if (claimRequests.length > 0) {
+                claimBadge.innerText = claimRequests.length;
+                claimBadge.style.display = "inline-block";
+            } else {
+                claimBadge.style.display = "none";
+            }
+
+            complaints.forEach((c, index) => {
+                if(c.status === "จัดเก็บแล้ว") return; 
+
+                if(c.category !== 'แจ้งเก็บของได้') {
+                    let actionUI = "";
+                    let checkboxUI = "";
+
+                    if(c.status === "รออนุมัติ") {
+                        checkboxUI = `<input type="checkbox" class="chk-del-${getCategorySelector(c.category)}" value="${index}">`;
+                        actionUI = `<button class="btn btn-sm" style="background:#e0f7ff; border:1px solid #00b5ef; color:#00b5ef; font-weight:700;" onclick="approveComplaint(${index})">อนุมัติเข้าระบบ</button>`;
+                    } else {
+                        checkboxUI = `<input type="checkbox" disabled title="อนุมัติแล้วไม่สามารถลบผ่านฟังก์ชันคัดกรองได้">`;
+                        let badgeColor = c.status === "กำลังดำเนินการ" ? "#f59e0b" : (c.status === "แก้ไขสำเร็จแล้ว" ? "#10b981" : "#8b5cf6");
+                        
+                        let archiveOptionUI = "";
+                        if(c.category === 'ปัญหาทั่วไป') {
+                            archiveOptionUI = `<button class="btn btn-sm" style="background:#f0fdf4; border:1px solid #16a34a; color:#16a34a; font-weight:700; margin-top:5px; padding:3px 8px; font-size:12px;" onclick="openGeneralArchiveModal(${index})"><i class="fa-solid fa-box-archive"></i> จัดเก็บลงคลัง</button>`;
+                        }
+
+                        actionUI = `
+                            <div style="display:flex; flex-direction:column;">
+                                <select onchange="updateGeneralStatus(${index}, this.value)" style="padding:6px 10px; border-radius:8px; font-size:13px; font-weight:600; color:${badgeColor}">
+                                    <option value="กำลังดำเนินการ" ${c.status === 'กำลังดำเนินการ' ? 'selected' : ''}>🟡 กำลังดำเนินการ</option>
+                                    <option value="ส่งต่อหน่วยงานอื่น" ${c.status === 'ส่งต่อหน่วยงานอื่น' ? 'selected' : ''}>🟣 ส่งต่อหน่วยงานอื่น</option>
+                                    <option value="แก้ไขสำเร็จแล้ว" ${c.status === 'แก้ไขสำเร็จแล้ว' ? 'selected' : ''}>🟢 แก้ไขสำเร็จแล้ว</option>
+                                </select>
+                                ${archiveOptionUI}
+                            </div>
+                        `;
+                    }
+
+                    let rowHtml = `
+                        <tr>
+                            <td style="text-align: center;">${checkboxUI}</td>
+                            <td><b>${c.name}</b><br><small style="color:var(--text-muted)">${c.info}</small></td>
+                            <td style="white-space:normal; min-width:180px;"><b>${c.topic}</b>${c.detail ? `<br><span style="font-size:12.5px;color:#64748b;">${c.detail}</span>`:''}</td>
+                            <td><button type="button" class="btn btn-view-evidence" onclick="viewEvidencePopup(${index})">👁️ ดูหลักฐาน</button></td>
+                            <td>${actionUI}</td>
+                        </tr>
+                    `;
+
+                    if(c.category === 'อุปกรณ์ห้องเรียนพัง') {
+                        repairCount++;
+                        tblRepair.innerHTML += rowHtml;
+                    } else if(c.category === 'บุหรี่ไฟฟ้าในโรงเรียน') {
+                        smokingCount++;
+                        tblSmoking.innerHTML += rowHtml;
+                    } else {
+                        generalCount++;
+                        tblGeneral.innerHTML += rowHtml;
+                    }
+                } 
+                else {
+                    lostCount++;
+                    let actionUI = "";
+                    if(c.status === "รออนุมัติ") {
+                        actionUI = `<button class="btn btn-sm" style="background:#e0f7ff; border:1px solid #00b5ef; color:#00b5ef; font-weight:700;" onclick="approveComplaint(${index})">อนุมัติขึ้นบอร์ด</button>`;
+                    } else {
+                        actionUI = `
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <select onchange="updateLostItemStatus(${index}, this.value)" style="padding:4px 8px; font-size:12.5px; font-weight:700;">
+                                    <option value="รอเจ้าของมารับ" ${c.lostItemStatus === 'รอเจ้าของมารับ' ? 'selected' : ''}>🟡 รอเจ้าของมารับ</option>
+                                    <option value="มีคนมารับแล้ว" ${c.lostItemStatus === 'มีคนมารับแล้ว' ? 'selected' : ''}>🔴 มีคนมารับแล้ว</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+
+                    let displayBadge = c.status === 'รออนุมัติ' 
+                        ? `<span class="badge" style="background:#fee2e2; color:#ef4444;">รออนุมัติพัสดุ</span>`
+                        : (c.lostItemStatus === 'มีคนมารับแล้ว' 
+                            ? `<span class="badge" style="background:#ffe4e6; color:#ef4444;">มีคนมารับแล้ว</span>`
+                            : `<span class="badge" style="background:#fffbeb; color:#d97706;">รอเจ้าของรับ</span>`);
+
+                    lostBody.innerHTML += `
+                        <tr>
+                            <td>${displayBadge}</td>
+                            <td><b>${c.name}</b><br><small style="color:var(--text-muted)">${c.info}</small></td>
+                            <td style="white-space:normal; min-width:180px;"><b>${c.topic}</b>${c.detail ? `<br><span style="font-size:12.5px;color:#64748b;">${c.detail}</span>`:''}</td>
+                            <td><button type="button" class="btn btn-view-evidence" onclick="viewEvidencePopup(${index})">👁️ ดูรูปสิ่งของ</button></td>
+                            <td>${actionUI}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            if(claimRequests.length === 0) {
+                claimRequestsBody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:var(--text-muted); padding:15px;'>ไม่มีคำขอติดต่อรับพัสดุคืนในขณะนี้</td></tr>";
+            } else {
+                claimRequests.forEach((req, reqIdx) => {
+                    let claimImgBtn = req.imgData 
+                        ? `<button type="button" class="btn btn-view-evidence" onclick="viewClaimEvidencePopup(${reqIdx})">👁️ ดูรูปหลักฐาน</button>` 
+                        : `<span style="color:var(--text-muted); font-size:12px;">ไม่ได้แนบรูป</span>`;
+
+                    claimRequestsBody.innerHTML += `
+                        <tr>
+                            <td><strong style="color: var(--ntun-blue);">${req.itemName}</strong><br><small style="color:var(--text-muted)">ดัชนีเคส: #${req.complaintIndex + 1}</small></td>
+                            <td><b>${req.receiverName}</b><br><small style="color:var(--text-muted)">${req.receiverInfo}</small></td>
+                            <td><strong style="color:var(--text-dark)">${req.phone}</strong></td>
+                            <td style="white-space:normal; max-width:250px; font-size:13px; color:#475569;">${req.evidenceDetail}<br>${claimImgBtn}</td>
+                            <td>
+                                <button class="btn btn-sm" style="background:#ecfdf5; border:1px solid #10b981; color:#10b981; font-weight:700;" onclick="approveClaimRequest(${reqIdx})">
+                                    <i class="fa-solid fa-square-check"></i> อนุมัติให้คืนของ
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            if(repairCount === 0) tblRepair.innerHTML = "<tr><td colspan='5' style='text-align:center; color:var(--text-muted); padding:15px;'>ไม่มีข้อมูลในหมวดหมู่นี้</td></tr>";
+            if(smokingCount === 0) tblSmoking.innerHTML = "<tr><td colspan='5' style='text-align:center; color:var(--text-muted); padding:15px;'>ไม่มีข้อมูลในหมวดหมู่นี้</td></tr>";
+            if(generalCount === 0) tblGeneral.innerHTML = "<tr><td colspan='5' style='text-align:center; color:var(--text-muted); padding:15px;'>ไม่มีข้อมูลในหมวดหมู่นี้</td></tr>";
+            if(lostCount === 0) lostBody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:var(--text-muted); padding:15px;'>ไม่มีพัสดุสิ่งของสูญหาย in ขณะนี้</td></tr>";
+
+            if(archives.length === 0) {
+                archiveBody.innerHTML = "<tr><td colspan='6' style='text-align:center; color:var(--text-muted); padding:15px;'>ยังไม่มีข้อมูลพัสดุในคลังประวัติ</td></tr>";
+            } else {
+                archives.forEach(arc => {
+                    archiveBody.innerHTML += `
+                        <tr>
+                            <td><span class="badge" style="background:#f3e8ff; color:#a855f7;">${arc.itemCategory}</span></td>
+                            <td><strong>${arc.itemName}</strong></td>
+                            <td style="white-space:normal; min-width:140px;"><span style="color:#10b981; font-weight:600;">${arc.receiver}</span></td>
+                            <td><strong style="color:var(--ntun-blue)">${arc.phone}</strong></td>
+                            <td><small style="color:var(--text-muted);">${arc.founder}</small></td>
+                            <td><span class="badge" style="background:#e2e8f0; color:#475569;">จัดเก็บแล้ว</span></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        renderDashboardStats();
+        renderLostFoundBoard();
+    </script>
+ 
+
+</body>
+</html>
